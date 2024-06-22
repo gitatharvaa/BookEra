@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -40,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -50,6 +53,49 @@ android {
 }
 
 dependencies {
+    //Firebase/FireStore
+    implementation(platform(libs.firebase.bom))
+    //firebase Auth and cloud firestore
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
+    //dagger-hilt
+
+    // note that Hilt Viewmodel is now part of the main Hilt package,
+
+    // so trying to import it with its own line causes errors
+
+    val hiltVers = "2.51"
+
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.gradle.plugin)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    //material icons - use with caution!
+    implementation(libs.androidx.material.icons.extended)
+
+    // Coroutines
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx) //may need to remove this
+
+    //Coil
+    implementation(libs.coil.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+    //OkHttp
+    implementation(libs.okhttp) // 5.0.0-alpha.2 in course
+
+    //gson
+    implementation(libs.gson)
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

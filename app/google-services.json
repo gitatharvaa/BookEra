@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104765004764",
+    "project_id": "readerapp-3142a",
+    "storage_bucket": "readerapp-3142a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104765004764:android:df05f904c36ec702dbcd19",
+        "android_client_info": {
+          "package_name": "com.example.bookera"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK4f3k6iBR49g7IxswJTxKFN5hibXZseo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
