@@ -38,122 +38,137 @@ import com.example.bookera.R
 import com.example.bookera.components.BookEraLogo
 import com.example.bookera.components.EmailInput
 import com.example.bookera.components.PasswordInput
+import com.example.bookera.navigation.ReaderScreens
 
 @Composable
 fun ReaderLoginScreen(
     navController: NavController,
-    //viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val showLoginForm = rememberSaveable { mutableStateOf(true) }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
 
             BookEraLogo()
 
             if (showLoginForm.value) {
                 //to check if we want to show the user form or not
-                UserForm(loading = false, isCreateAccount = false) { email, password -> }
+                UserForm(loading = false, isCreateAccount = false) { email, password ->
+                    viewModel.signInWithEmailAndPassword(email, password) {
+                        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+                    }
+                }
             } else {
-                UserForm(loading = false, isCreateAccount = true) { email, password -> }
+                UserForm(loading = false, isCreateAccount = true) { email, password ->
+                    viewModel.createUserWithEmailAndPassword(email, password) {
+                        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+                    }
                 }
             }
-        Spacer(modifier = Modifier.height(15.dp))
-        Row(
-            modifier = Modifier.padding(15.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val text = if (showLoginForm.value) "Sign up" else "Login"
-            Text(text = "New User?")
-            Text(text,
-                modifier = Modifier
-                    .clickable {
-                        showLoginForm.value = !showLoginForm.value
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                modifier = Modifier.padding(15.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val text = if (showLoginForm.value) "Sign up" else "Login"
+                Text(text = "New User?")
+                Text(text,
+                    modifier = Modifier
+                        .clickable {
+                            showLoginForm.value = !showLoginForm.value
 
-                    }
-                    .padding(start = 5.dp),
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary)//secondaryVariant
+                        }
+                        .padding(start = 5.dp),
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary)//secondaryVariant
+            }
         }
     }
 }
 
 
-@Preview
-@Composable
-fun UserForm( //in here UI of email,password text field and submit button is kept together
-    loading: Boolean = false,
-    isCreateAccount: Boolean = false,
-    onDone: (String, String) -> Unit = { email, pwd ->}
-) {
-    /* when we rememberSaveable, we can save the state of the even when user
+
+
+
+    @Composable
+    fun UserForm( //in here UI of email,password text field and submit button is kept together
+        loading: Boolean = false,
+        isCreateAccount: Boolean = false,
+        onDone: (String, String) -> Unit = { email, pwd -> }
+    ) {
+        /* when we rememberSaveable, we can save the state of the even when user
      rotates his/her device, this wont happen in case of remember */
-    val email = rememberSaveable { mutableStateOf("") }
-    val password = rememberSaveable { mutableStateOf("") }
-    val passwordVisibility = rememberSaveable { mutableStateOf(false) }
-    val passwordFocusRequest = FocusRequester.Default
-    val keyboardController = LocalSoftwareKeyboardController.current //we want to get control over the keyboard
-    val valid = remember(email.value, password.value) {
-        email.value.trim().isNotEmpty() && password.value.trim().isNotEmpty()
-    }
-/* Here a scroll view is created to make the form scrollable, when keyboard gets
+        val email = rememberSaveable { mutableStateOf("") }
+        val password = rememberSaveable { mutableStateOf("") }
+        val passwordVisibility = rememberSaveable { mutableStateOf(false) }
+        val passwordFocusRequest = FocusRequester.Default
+        val keyboardController =
+            LocalSoftwareKeyboardController.current //we want to get control over the keyboard
+        val valid = remember(email.value, password.value) {
+            email.value.trim().isNotEmpty() && password.value.trim().isNotEmpty()
+        }
+        /* Here a scroll view is created to make the form scrollable, when keyboard gets
  pop out from below so that the form is visible*/
-    val modifier = Modifier
-        .height(250.dp)
-        .background(MaterialTheme.colorScheme.background)
-        .verticalScroll(rememberScrollState())
+        val modifier = Modifier
+            .height(250.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
 
 
-    Column(modifier = Modifier.padding(bottom = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        if (isCreateAccount) {
-            Text(text = stringResource(id = R.string.create_acct),
-                modifier = Modifier.padding(4.dp))
-        } else {
-            Text("")
-        }
-        EmailInput(
-            emailState = email, enabled = !loading,
-            onAction = KeyboardActions {
-                passwordFocusRequest.requestFocus()//after email input by user
-                //focus on password input
-            },
-        )
-        PasswordInput(
-            modifier = Modifier.focusRequester(passwordFocusRequest),
-            passwordState = password,
-            labelId = "Password",
-            enabled = !loading,
-            passwordVisibility = passwordVisibility,
-            onAction = KeyboardActions {
-                if (!valid) return@KeyboardActions
-                onDone(email.value.trim(), password.value.trim())//this is a callback func.
-                //that will take in the email and password
-            })
+        Column(
+            modifier = Modifier.padding(bottom = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (isCreateAccount) {
+                Text(
+                    text = stringResource(id = R.string.create_acct),
+                    modifier = Modifier.padding(4.dp)
+                )
+            } else {
+                Text("")
+            }
+            EmailInput(
+                emailState = email, enabled = !loading,
+                onAction = KeyboardActions {
+                    passwordFocusRequest.requestFocus()//after email input by user
+                    //focus on password input
+                },
+            )
+            PasswordInput(
+                modifier = Modifier.focusRequester(passwordFocusRequest),
+                passwordState = password,
+                labelId = "Password",
+                enabled = !loading,
+                passwordVisibility = passwordVisibility,
+                onAction = KeyboardActions {
+                    if (!valid) return@KeyboardActions
+                    onDone(email.value.trim(), password.value.trim())//this is a callback func.
+                    //that will take in the email and password
+                })
 
-        SubmitButton(
-            textId = if (isCreateAccount) "Create Account" else "Login",
-            loading = loading,
-            validInputs = valid
-        ){
-            onDone(email.value.trim(), password.value.trim())
-            keyboardController?.hide()//after login button is clicked, keyboard gets hide
-        }
-
-
-
-    }
-
-
-}
+            SubmitButton(
+                textId = if (isCreateAccount) "Create Account" else "Login",
+                loading = loading,
+                validInputs = valid
+            ) {
+                onDone(email.value.trim(), password.value.trim())
+                keyboardController?.hide()//after login button is clicked, keyboard gets hide
+            }
+        }//column end
+    }//Userform end
 
 @Composable
-fun SubmitButton(textId: String,
-                 loading: Boolean,
-                 validInputs: Boolean,
-                 onClick: () -> Unit) {
+fun SubmitButton(
+    textId: String,
+    loading: Boolean,
+    validInputs: Boolean,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
         modifier = Modifier
@@ -167,4 +182,5 @@ fun SubmitButton(textId: String,
         else Text(text = textId, modifier = Modifier.padding(5.dp))
 
     }
+
 }

@@ -21,13 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.bookera.components.BookEraLogo
 import com.example.bookera.navigation.ReaderScreens
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 
@@ -39,24 +36,23 @@ fun ReaderSplashScreen(navController: NavController) {
     }
     LaunchedEffect(key1 = true ){
         scale.animateTo(targetValue = 0.9f,
-            animationSpec = tween(durationMillis = 2500,
+            animationSpec = tween(durationMillis = 800,
                 easing = {
                     OvershootInterpolator(5f)
                         .getInterpolation(it)
                 }))
-        delay(1000L)
+        delay(2000L)
 
         //to see if the user is already logged in or not
         //if not, then navigate to login screen
         //if yes, then navigate to home screen
-        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
-            navController.navigate(ReaderScreens.LoginScreen.name)
-        }else {
-            navController.navigate(ReaderScreens.ReaderHomeScreen.name)
-        }
+//        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+//            navController.navigate(ReaderScreens.LoginScreen.name)
+//        }else {//already logged In
+//            navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+//        }
 
-
-
+        navController.navigate(ReaderScreens.LoginScreen.name)
 
     }
 
@@ -77,13 +73,8 @@ fun ReaderSplashScreen(navController: NavController) {
             Text(text = "\"A new Era of Reading\"",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.Black.copy(alpha = 0.7f))
-
-
         }
     }
-
-
-
 }
 
 
