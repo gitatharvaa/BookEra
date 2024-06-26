@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookera.navigation.ReaderNavigation
 import com.example.bookera.ui.theme.BookEraTheme
+import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BookEraTheme {
                 ReaderApp()
+                FirebaseApp.initializeApp(this)
             }
         }
     }
@@ -62,3 +64,7 @@ fun GreetingPreview() {
 
     }
 }
+//Found the issue. Check your data classes and make sure they are returning the actual fields
+// & values that is set up in the API. For me the issue was in the VolumeInfo data class, with the field averageInfo.
+// It is actually supposed to be a double, but it was an int. So change the Int to a Double and
+// it should pass through and work as expected.

@@ -31,7 +31,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.bookera.R
@@ -160,7 +159,7 @@ fun ReaderLoginScreen(
                 keyboardController?.hide()//after login button is clicked, keyboard gets hide
             }
         }//column end
-    }//Userform end
+    }//User form end
 
 @Composable
 fun SubmitButton(

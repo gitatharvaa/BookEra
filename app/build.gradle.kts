@@ -89,11 +89,14 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
 
-    //OkHttp
+    //OkHttp-another lib with retrofit which does the same work of calling
     implementation(libs.okhttp) // 5.0.0-alpha.2 in course
 
     //gson
     implementation(libs.gson)
+    //gemini provided gson dependency
+    implementation (libs.gson)
+    implementation (libs.converter.gson)
 
 
 
